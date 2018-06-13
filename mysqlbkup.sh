@@ -33,7 +33,7 @@ if [ -z "$DEFAULTS_FILE" ]; then
 fi
 
 if [ -z "$MYSQL_DIR" ]; then
-    echo 'mysql configuration file (MYSQL_DIR) not set in configuration.' 1>&2
+    echo 'echo 'MySql directory not set in configuration.' 1>&2
     exit 2
 fi
 
