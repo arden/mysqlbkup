@@ -3,6 +3,9 @@
 # https://github.com/quickshiftin/mysqlbkup
 ##########
 
+# mysql install dir
+MYSQL_DIR=/app/mysql
+
 DEFAULTS_FILE=/etc/mysqlbkup.cnf
 
 BACKUP_DIR=/var/mysqlbkup
