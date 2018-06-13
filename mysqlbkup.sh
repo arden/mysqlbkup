@@ -32,6 +32,11 @@ if [ -z "$DEFAULTS_FILE" ]; then
     exit 1
 fi
 
+if [ -z "$MYSQL_DIR" ]; then
+    echo 'mysql configuration file (MYSQL_DIR) not set in configuration.' 1>&2
+    exit 2
+fi
+
 if [ -z "$BACKUP_DIR" ]; then
     echo 'Backup directory not set in configuration.' 1>&2
     exit 3
@@ -74,7 +79,7 @@ if [ -n "$1" -a "$1" == 'dry' ]; then
 fi
 
 # Check for external dependencies, bail with an error message if any are missing
-for program in date $BKUP_BIN head hostname ls mysql mysqldump rm tr wc
+for program in date $BKUP_BIN head hostname ls rm tr wc
 do
     which $program 1>/dev/null 2>/dev/null
     if [ $? -gt 0 ]; then
@@ -87,7 +92,7 @@ done
 date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
-dbs=$(echo 'show databases' | mysql --defaults-file=$DEFAULTS_FILE )
+dbs=$(echo 'show databases' | $MYSQL_DIR/bin/mysql --defaults-file=$DEFAULTS_FILE )
 
 # Apply default filters
 db_filter='Database information_schema performance_schema mysql'
@@ -159,7 +164,7 @@ do
         continue;
     fi
 
-    mysqldump --defaults-file=$DEFAULTS_FILE "$db" | $BKUP_BIN > "$backupDir/$backupFile"
+    $MYSQL_DIR/bin/mysqldump --defaults-file=$DEFAULTS_FILE "$db" | $BKUP_BIN > "$backupDir/$backupFile"
     echo
 done
 
